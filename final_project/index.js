@@ -4,9 +4,8 @@ const session = require('express-session')
 const customer_routes = require('./router/auth_users.js').authenticated;
 const genl_routes = require('./router/general.js').general;
 
-
+// TASK 6.1 - Complete the code for registering a new user 
 let users = []
-
 // Check if a user with the given username already exists
 const doesExist = (username) => {
     // Filter the users array for any user with the same username
@@ -50,7 +49,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
 });
 
 
-
+// TASK 6.2 - Complete the code for registering a new user
 // Register a new user
 app.post("/register", (req, res) => {
     const username = req.body.username;
