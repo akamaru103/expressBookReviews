@@ -12,14 +12,15 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  // Send JSON response with formatted books data
+    // TASK 1 - Send JSON response with formatted books data
     res.send(JSON.stringify(books, null, 2));
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // TASK 2 - Retrieve the ISBN parameter from the request URL and send the corresponding book's details
+    const isbn = req.params.isbn;
+    res.send(books[isbn]);
  });
   
 // Get book details based on author
