@@ -21,24 +21,31 @@ public_users.get('/isbn/:isbn',function (req, res) {
     // TASK 2 - Retrieve the ISBN parameter from the request URL and send the corresponding book's details
     const isbn = req.params.isbn;
     res.send(books[isbn]);
- });
+ }); 
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // TASK 3 - Get book details from author
+    const author = req.params.author;
+    const booksArray = Object.values(books);
+    let filtered_books = booksArray.filter((book) => book.author === author);
+    res.send(filtered_books); 
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // TASK 4 - Get book details from title
+    const title = req.params.title;
+    const booksArray = Object.values(books);
+    let filtered_books = booksArray.filter((book) => book.title === title);
+    res.send(filtered_books); 
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  // TASK 5 - Get reviews by ISBN
+    const isbn = req.params.isbn;
+    res.send(books[isbn].reviews);
 });
 
 module.exports.general = public_users;
