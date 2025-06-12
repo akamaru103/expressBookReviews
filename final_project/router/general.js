@@ -59,7 +59,7 @@ public_users.get('/',function (req, res) {
 public_users.get('/isbn/:isbn',function (req, res) {
     // TASK 2 - Retrieve the ISBN parameter from the request URL and send the corresponding book's details
     const isbn = req.params.isbn;
-    res.send(books[isbn]);
+    (books[isbn]) ? res.send(books[isbn]) : res.status(404).json({message: "Book not found"});
  }); 
   
 // Get book details based on author
@@ -68,7 +68,7 @@ public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
     const booksArray = Object.values(books);
     let filtered_books = booksArray.filter((book) => book.author === author);
-    res.send(filtered_books); 
+    (filtered_books.length) ? res.send(filtered_books) : res.status(404).json({message: "No books found"});
 });
 
 // Get all books based on title
@@ -77,14 +77,19 @@ public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
     const booksArray = Object.values(books);
     let filtered_books = booksArray.filter((book) => book.title === title);
-    res.send(filtered_books); 
+    (filtered_books.length) ? res.send(filtered_books) : res.status(404).json({message: "Book not found"});
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
   // TASK 5 - Get reviews by ISBN
     const isbn = req.params.isbn;
-    res.send(books[isbn].reviews);
+    if (books[isbn]) {
+        const reviews = books[isbn].reviews;
+        (Object.keys(reviews).length) ? res.send(reviews) : res.status(404).json({ message: "No reviews found" });
+    } else {
+        res.status(404).json({ message: "Book not found" });
+    };
 });
 
 
@@ -103,7 +108,7 @@ public_users.get('/books', function (req, res) {
 
 
 // TASK 11 - Get a book by ISBN using promises
-public_users.get('/books/:isbn', function (req, res) {
+public_users.get('/books/isbn/:isbn', function (req, res) {
     const isbn = req.params.isbn;
 
     const get_book = new Promise((resolve, reject) => {
