@@ -87,4 +87,95 @@ public_users.get('/review/:isbn',function (req, res) {
     res.send(books[isbn].reviews);
 });
 
+
+// TASK 10 - Get the book list using promises
+public_users.get('/books', function (req, res) {
+
+    const get_books = new Promise((resolve, reject) => {
+        resolve(
+            res.send(JSON.stringify({ books }, null, 2))
+        );
+    });
+
+    get_books.then(() => console.log("Promise for Task 10 resolved (book list)"));
+
+});
+
+
+// TASK 11 - Get a book by ISBN using promises
+public_users.get('/books/:isbn', function (req, res) {
+    const isbn = req.params.isbn;
+
+    const get_book = new Promise((resolve, reject) => {
+        if (books[isbn]) {
+            resolve(books[isbn]);
+        } else {
+            reject("Book not found");
+        }
+    });
+
+    get_book.then((bookData) => {
+        res.send(bookData);
+        console.log("Promise for Task 11 resolved (ISBN)");
+    }).catch((error) => {
+        res.status(404).send(error); 
+        console.error("Promise for Task 11 rejected (ISBN)")
+    });
+
+});
+
+// TASK 12 - Get a book by author using promises
+public_users.get('/books/author/:author', function (req, res) {
+
+    const author = req.params.author;
+    const booksArray = Object.values(books);
+    let filtered_books = booksArray.filter((book) => book.author === author);
+
+    const get_book = new Promise((resolve, reject) => {
+        if (filtered_books.length) {
+            resolve(filtered_books);
+        } else {
+            reject("No books by that author.");
+        }
+    });
+
+    get_book.then((bookData) => {
+        res.send(bookData);
+        console.log("Promise for Task 12 resolved (author)");
+    }).catch((error) => {
+        res.status(404).send(error); 
+        console.error("Promise for Task 12 rejected (author)")
+    });
+
+});
+
+// TASK 13 - Get a book by title using promises
+public_users.get('/books/title/:title', function (req, res) {
+
+    const title = req.params.title;
+    const booksArray = Object.values(books);
+    let filtered_books = booksArray.filter((book) => book.title === title);
+
+    const get_book = new Promise((resolve, reject) => {
+        if (filtered_books.length) {
+            resolve(filtered_books);
+        } else {
+            reject("No books with that title.");
+        }
+    });
+
+    get_book.then((bookData) => {
+        res.send(bookData);
+        console.log("Promise for Task 13 resolved (title)");
+    }).catch((error) => {
+        res.status(404).send(error); 
+        console.error("Promise for Task 13 rejected (title)")
+    });
+
+});
+
+
+
+
+
 module.exports.general = public_users;
