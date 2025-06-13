@@ -48,7 +48,7 @@ regd_users.post("/login", (req,res) => {
         req.session.authorization = {
             accessToken, username
         }
-        return res.status(200).send("User successfully logged in");
+        return res.status(200).json({message: "User successfully logged in"});
     } else {
         return res.status(208).json({ message: "Invalid Login. Check username and password." });
     }
@@ -66,10 +66,10 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
             filteredBook['reviews'][reviewer] = review;
             books[isbn] = filteredBook;
         }
-        res.send(`The review for the book with ISBN  ${isbn} has been added/updated.`);
+        res.json({message: `The review for the book with ISBN ${isbn} has been added/updated.`});
     }
     else {
-        res.send("Unable to find this ISBN!");
+        res.status(404).json({message: "Unable to find this ISBN"});
     }
 });
 
@@ -80,10 +80,10 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     if (filteredBook) {
         let reviewer = req.session.authorization['username'];
         delete filteredBook['reviews'][reviewer];
-        res.send(`The review for the book with ISBN  ${isbn} has been deleted.`);
+        res.json({message: `The review for the book with ISBN  ${isbn} has been deleted.`});
     }
     else {
-        res.send("Unable to find this ISBN!");
+        res.status(404).json({message: "Unable to find this ISBN"});
     }    
 });
 

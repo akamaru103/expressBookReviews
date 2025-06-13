@@ -52,7 +52,11 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
     // TASK 1 - Send JSON response with formatted books data
-    res.send(JSON.stringify(books, null, 2));
+    if (Object.keys(books).length){
+        res.send(JSON.stringify(books, null, 2));
+    }else{
+        res.status(404).send("No books found");
+    }    
 });
 
 // Get book details based on ISBN
@@ -97,20 +101,31 @@ public_users.get('/review/:isbn',function (req, res) {
 public_users.get('/books', function (req, res) {
 
     const get_books = new Promise((resolve, reject) => {
-        resolve(
-            res.send(JSON.stringify({ books }, null, 2))
-        );
+        // Check if book list object has content
+        if (Object.keys(books).length){
+            resolve(JSON.stringify({ books }, null, 2));
+        }else{
+            reject("No books found");
+        }          
     });
-
-    get_books.then(() => console.log("Promise for Task 10 resolved (book list)"));
+    // Respond with book list or error message
+    get_books.then((bookData) => {
+        res.send(bookData);
+        console.log("Promise for Task 10 resolved (all books)");
+    }).catch((error) => {
+        res.status(404).send(error); 
+        console.error("Promise for Task 10 rejected (all books)")
+    });
 
 });
 
 
 // TASK 11 - Get a book by ISBN using promises
 public_users.get('/books/isbn/:isbn', function (req, res) {
+
     const isbn = req.params.isbn;
 
+    //Check if book exists with the requested ISBN
     const get_book = new Promise((resolve, reject) => {
         if (books[isbn]) {
             resolve(books[isbn]);
@@ -118,7 +133,7 @@ public_users.get('/books/isbn/:isbn', function (req, res) {
             reject("Book not found");
         }
     });
-
+    // Respond with book or error message
     get_book.then((bookData) => {
         res.send(bookData);
         console.log("Promise for Task 11 resolved (ISBN)");
@@ -129,6 +144,7 @@ public_users.get('/books/isbn/:isbn', function (req, res) {
 
 });
 
+
 // TASK 12 - Get a book by author using promises
 public_users.get('/books/author/:author', function (req, res) {
 
@@ -136,6 +152,7 @@ public_users.get('/books/author/:author', function (req, res) {
     const booksArray = Object.values(books);
     let filtered_books = booksArray.filter((book) => book.author === author);
 
+    // Check if any results for the requested author
     const get_book = new Promise((resolve, reject) => {
         if (filtered_books.length) {
             resolve(filtered_books);
@@ -143,7 +160,7 @@ public_users.get('/books/author/:author', function (req, res) {
             reject("No books by that author.");
         }
     });
-
+    // Respond with book(s) or error message
     get_book.then((bookData) => {
         res.send(bookData);
         console.log("Promise for Task 12 resolved (author)");
@@ -154,6 +171,7 @@ public_users.get('/books/author/:author', function (req, res) {
 
 });
 
+
 // TASK 13 - Get a book by title using promises
 public_users.get('/books/title/:title', function (req, res) {
 
@@ -161,6 +179,7 @@ public_users.get('/books/title/:title', function (req, res) {
     const booksArray = Object.values(books);
     let filtered_books = booksArray.filter((book) => book.title === title);
 
+    // Check if any results for the requested title
     const get_book = new Promise((resolve, reject) => {
         if (filtered_books.length) {
             resolve(filtered_books);
@@ -169,6 +188,7 @@ public_users.get('/books/title/:title', function (req, res) {
         }
     });
 
+    // Respond with book or error message
     get_book.then((bookData) => {
         res.send(bookData);
         console.log("Promise for Task 13 resolved (title)");
